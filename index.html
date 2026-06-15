@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>端到端2026年6月AI+流程公开课深圳站同学录</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', 'Helvetica Neue', '苹方-简', 'PingFang SC', '微软雅黑', sans-serif;
+            background: linear-gradient(135deg, #0a1628 0%, #1a365d 50%, #1e3a5f 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            color: #e2e8f0;
+        }
+        .container { max-width: 1100px; margin: 0 auto; }
+        .header {
+            text-align: center;
+            padding: 50px 20px 30px;
+        }
+        .header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        .header .subtitle {
+            font-size: 16px;
+            color: #94a3b8;
+            font-weight: 400;
+            margin-bottom: 8px;
+        }
+        .header .date {
+            font-size: 14px;
+            color: #64748b;
+            font-weight: 300;
+        }
+        .header .count {
+            display: inline-block;
+            margin-top: 16px;
+            padding: 6px 20px;
+            background: rgba(99, 130, 190, 0.15);
+            border: 1px solid rgba(99, 130, 190, 0.3);
+            border-radius: 20px;
+            font-size: 13px;
+            color: #93b4d4;
+        }
+        .divider {
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(90deg, #3b82f6, #6366f1);
+            margin: 20px auto;
+            border-radius: 1px;
+        }
+        /* 课程按钮导航 */
+        .nav-buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+            margin: 30px 0 40px;
+        }
+        .nav-btn {
+            position: relative;
+            padding: 22px 16px;
+            border-radius: 14px;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.05);
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        .nav-btn:hover {
+            background: rgba(59, 130, 246, 0.15);
+            border-color: rgba(59, 130, 246, 0.4);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        .nav-btn.active {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(99, 102, 241, 0.2));
+            border-color: #3b82f6;
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.2);
+        }
+        .nav-btn .btn-day {
+            font-size: 12px;
+            color: #64748b;
+            margin-bottom: 6px;
+        }
+        .nav-btn .btn-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #f1f5f9;
+        }
+        .nav-btn .btn-date {
+            font-size: 11px;
+            color: #64748b;
+            margin-top: 6px;
+        }
+        /* 学员列表 */
+        .day-panel { display: none; }
+        .day-panel.active { display: block; }
+        .roster-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            padding: 12px 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            animation: fadeIn 0.4s ease forwards;
+            opacity: 0;
+        }
+        .card:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(99, 130, 190, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+        .avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6, #6366f1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 600;
+            color: #ffffff;
+            flex-shrink: 0;
+            box-shadow: 0 3px 10px rgba(59, 130, 246, 0.3);
+        }
+        .info { flex: 1; min-width: 0; }
+        .info .name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #f1f5f9;
+            margin-bottom: 2px;
+        }
+        .info .company {
+            font-size: 12px;
+            color: #94a3b8;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .section-title {
+            text-align: center;
+            font-size: 20px;
+            font-weight: 600;
+            color: #e2e8f0;
+            margin: 50px 0 24px;
+            letter-spacing: 1px;
+        }
+        .company-summary {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            padding: 30px;
+            margin-top: 20px;
+        }
+        .company-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+        .company-tag {
+            padding: 6px 14px;
+            background: rgba(99, 130, 190, 0.12);
+            border: 1px solid rgba(99, 130, 190, 0.2);
+            border-radius: 16px;
+            font-size: 13px;
+            color: #a8c4e0;
+            transition: all 0.2s ease;
+        }
+        .company-tag:hover {
+            background: rgba(99, 130, 190, 0.2);
+            border-color: rgba(99, 130, 190, 0.4);
+        }
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 20px;
+            color: #475569;
+            font-size: 12px;
+        }
+        @media (max-width: 768px) {
+            .nav-buttons { grid-template-columns: repeat(2, 1fr); }
+            .roster-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+            .header h1 { font-size: 24px; }
+            body { padding: 20px 12px; }
+            .company-summary { padding: 20px 16px; }
+        }
+        @media (max-width: 480px) {
+            .roster-grid { grid-template-columns: 1fr; }
+            .nav-buttons { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+            .nav-btn { padding: 16px 12px; }
+            .nav-btn .btn-title { font-size: 14px; }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>端到端2026年6月AI+流程公开课</h1>
+            <p class="subtitle">深圳站 · 同学录</p>
+            <div class="divider"></div>
+            <p class="date">2026年6月11日 - 6月14日</p>
+            <span class="count">共 61 位学员 · 29 家企业</span>
+        </div>
+
+        <!-- 课程导航按钮 -->
+        <div class="nav-buttons">
+            <div class="nav-btn active" onclick="switchDay(0)">
+                <div class="btn-day">第一天</div>
+                <div class="btn-title">流程设计实战</div>
+                <div class="btn-date">6月11日</div>
+            </div>
+            <div class="nav-btn" onclick="switchDay(1)">
+                <div class="btn-day">第二天</div>
+                <div class="btn-title">流程优化实战</div>
+                <div class="btn-date">6月12日</div>
+            </div>
+            <div class="nav-btn" onclick="switchDay(2)">
+                <div class="btn-day">第三天</div>
+                <div class="btn-title">变革项目管理</div>
+                <div class="btn-date">6月13日</div>
+            </div>
+            <div class="nav-btn" onclick="switchDay(3)">
+                <div class="btn-day">第四天</div>
+                <div class="btn-title">AI+流程管理</div>
+                <div class="btn-date">6月14日</div>
+            </div>
+        </div>
+
+        <!-- 第一天 -->
+        <div class="day-panel active" id="day0">
+            <div class="roster-grid">
+                <div class="card"><div class="avatar">黄</div><div class="info"><div class="name">黄耀风</div><div class="company">江波龙电子</div></div></div>
+                <div class="card"><div class="avatar">张</div><div class="info"><div class="name">张梦伟</div><div class="company">江波龙电子</div></div></div>
+                <div class="card"><div class="avatar">王</div><div class="info"><div class="name">王思旖</div><div class="company">江波龙电子</div></div></div>
+                <div class="card"><div class="avatar">刘</div><div class="info"><div class="name">刘姿麟</div><div class="company">江波龙电子</div></div></div>
+                <div class="card"><div class="avatar">陈</div><div class="info"><div class="name">陈桂华</div><div class="company">江波龙电子</div></div></div>
+                <div class="card"><div class="avatar">许</div><div class="info"><div class="name">许泉</div><div class="company">锐捷网络</div></div></div>
+                <div class="card"><div class="avatar">陈</div><div class="info"><div class="name">陈献文</div><div class="company">锐捷网络</div></div></div>
+                <div class="card"><div class="avatar">廖</div><div class="info"><div class="name">廖梦雅</div><div class="company">重庆中邮信科</div></div></div>
+                <div class="card"><div class="avatar">孙</div><div class="info"><div class="name">孙瑶</div><div class="company">重庆中邮信科</div></div></div>
+                <div class="card"><div class="avatar">李</div><div class="info"><div class="name">李永辉</div><div class="company">箭牌家居</div></div></div>
+                <div class="card"><div class="avatar">刘</div><div class="info"><div class="name">刘南</div><div class="company">箭牌家居</div></div></div>
+                <div class="card"><div class="avatar">于</div><div class="info"><div class="name">于丹</div><div class="company">箭牌家居</div></div></div>
+                <div class="card"><div class="avatar">杨</div><div class="info"><div class="name">杨晓蕾</div><div class="company">箭牌家居</div></div></div>
+                <div class="card"><div class="avatar">张</div><div class="info"><div class="name">张玲玲</div><div class="company">海大集团</div></div></div>
+                <div class="card"><div class="avatar">徐</div><div class="info"><div class="name">徐子濠</div><div class="company">简一陶瓷</div></div></div>
+                <div class="card"><div class="avatar">杨</div><div class="info"><div class="name">杨露丹</div><div class="company">简一陶瓷</div></div></div>
+                <div class="card"><div class="avatar">谭</div><div class="info"><div class="name">谭影娴</div><div class="company">金升阳科技</div></div></div>
+                <div class="card"><div class="avatar">李</div><div class="info"><div class="name">李炜蓉</div><div class="company">金升阳科技</div></div></div>
+                <div class="card"><div class="avatar">朱</div><div class="info"><div class="name">朱丽萍</div><div class="company">深圳北科</div></div></div>
+                <div class="card"><div class="avatar">吴</div><div class="info"><div class="name">吴亭橙</div><div class="company">永银文化</div></div></div>
+                <div class="card"><div class="avatar">张</div><div class="info"><div class="name">张昭红</div><div class="company">高典卫浴</div></div></div>
+                <div class="card"><div class="avatar">杨</div><div class="info"><div class="name">杨昔宁</div><div class="company">高山集团</div></div></div>
+            </div>
+        </div>
+
+        <!-- 第二天 -->
+        <div class="day-panel" id="day1">
+            <div class="roster-grid">
+                <div class="card"><div class="avatar">黄</div><div class="info"><div class="name">黄耀风</div><div class="company">江波龙电子</div></div></div>
+                <div class="card"><div class="avatar">张</div><div class="info"><div class="name">张梦伟</div><div class="company">江波龙电子</div></div></div>
+                <div class="card"><div class="avatar">王</div><div class="info"><div class="name">王思旖</div><div class="company">江波龙电子</div></div></div>
+                <div class="card"><div class="avatar">刘</div><div class="info"><div class="name">刘姿麟</div><div class="company">江波龙电子</div></div></div>
+                <div class="card"><div class="avatar">陈</div><div class="info"><div class="name">陈桂华</div><div class="company">江波龙电子</div></div></div>
+                <div class="card"><div class="avatar">许</div><div class="info"><div class="name">许泉</div><div class="company">锐捷网络</div></div></div>
+                <div class="card"><div class="avatar">陈</div><div class="info"><div class="name">陈献文</div><div class="company">锐捷网络</div></div></div>
+                <div class="card"><div class="avatar">廖</div><div class="info"><div class="name">廖梦雅</div><div class="company">重庆中邮信科</div></div></div>
+                <div class="card"><div class="avatar">孙</div><div class="info"><div class="name">孙瑶</div><div class="company">重庆中邮信科</div></div></div>
+                <div class="card"><div class="avatar">李</div><div class="info"><div class="name">李永辉</div><div class="company">箭牌家居</div></div></div>
+                <div class="card"><div class="avatar">刘</div><div class="info"><div class="name">刘南</div><div class="company">箭牌家居</div></div></div>
+                <div class="card"><div class="avatar">于</div><div class="info"><div class="name">于丹</div><div class="company">箭牌家居</div></div></div>
+                <div class="card"><div class="avatar">杨</div><div class="info"><div class="name">杨晓蕾</div><div class="company">箭牌家居</div></div></div>
+                <div class="card"><div class="avatar">汪</div><div class="info"><div class="name">汪毅</div><div class="company">箭牌家居</div></div></div>
+                <div class="card"><div class="avatar">谢</div><div class="info"><div class="name">谢东海</div><div class="company">则成电子</div></div></div>
+                <div class="card"><div class="avatar">邵</div><div class="info"><div class="name">邵爱飞</div><div class="company">北方夜视科技</div></div></div>
+                <div class="card"><div class="avatar">吴</div><div class="info"><div class="name">吴亭橙</div><div class="company">永银文化</div></div></div>
+                <div class="card"><div class="avatar">张</div><div class="info"><div class="name">张昭红</div><div class="company">高典卫浴</div></div></div>
+                <div class="card"><div class="avatar">杨</div><div class="info"><div class="name">杨昔宁</div><div class="company">高山集团</div></div></div>
+            </div>
+        </div>
+
+        <!-- 第三天 -->
+        <div class="day-panel" id="day2">
+            <div class="roster-grid">
+                <div class="card"><div class="avatar">黄</div><div class="info"><div class="name">黄耀风</div><div class="company">江波龙电子</div></div></div>
+                <div class="card"><div class="avatar">张</div><div class="info"><div class="name">张梦伟</div><div class="company">江波龙电子</div></div></div>
+                <div class="card"><div class="avatar">廖</div><div class="info"><div class="name">廖梦雅</div><div class="company">重庆中邮信科</div></div></div>
+                <div class="card"><div class="avatar">孙</div><div class="info"><div class="name">孙瑶</div><div class="company">重庆中邮信科</div></div></div>
+                <div class="card"><div class="avatar">陈</div><div class="info"><div class="name">陈献文</div><div class="company">锐捷网络</div></div></div>
+                <div class="card"><div class="avatar">邵</div><div class="info"><div class="name">邵爱飞</div><div class="company">北方夜视科技</div></div></div>
+                <div class="card"><div class="avatar">李</div><div class="info"><div class="name">李永辉</div><div class="company">箭牌家居</div></div></div>
+                <div class="card"><div class="avatar">刘</div><div class="info"><div class="name">刘南</div><div class="company">箭牌家居</div></div></div>
+                <div class="card"><div class="avatar">于</div><div class="info"><div class="name">于丹</div><div class="company">箭牌家居</div></div></div>
+                <div class="card"><div class="avatar">杨</div><div class="info"><div class="name">杨晓蕾</div><div class="company">箭牌家居</div></div></div>
+                <div class="card"><div class="avatar">谢</div><div class="info"><div class="name">谢炜</div><div class="company">箭牌家居</div></div></div>
+                <div class="card"><div class="avatar">汪</div><div class="info"><div class="name">汪毅</div><div class="company">箭牌家居</div></div></div>
+                <div class="card"><div class="avatar">吴</div><div class="info"><div class="name">吴亭橙</div><div class="company">永银文化</div></div></div>
+                <div class="card"><div class="avatar">董</div><div class="info"><div class="name">董源苑</div><div class="company">永银文化</div></div></div>
+                <div class="card"><div class="avatar">严</div><div class="info"><div class="name">严涛涛</div><div class="company">永银文化</div></div></div>
+                <div class="card"><div class="avatar">张</div><div class="info"><div class="name">张昭红</div><div class="company">高典卫浴</div></div></div>
+                <div class="card"><div class="avatar">杨</div><div class="info"><div class="name">杨昔宁</div><div class="company">高山集团</div></div></div>
+            </div>
+        </div>
+
+        <!-- 第四天 -->
+        <div class="day-panel" id="day3">
+            <div class="roster-grid">
+                <div class="card"><div class="avatar">谢</div><div class="info"><div class="name">谢东海</div><div class="company">则成电子</div></div></div>
+                <div class="card"><div class="avatar">黄</div><div class="info"><div class="name">黄哲淏</div><div class="company">则成电子</div></div></div>
+                <div class="card"><div class="avatar">曾</div><div class="info"><div class="name">曾剑城</div><div class="company">百果园集团</div></div></div>
+                <div class="card"><div class="avatar">黄</div><div class="info"><div class="name">黄跃飞</div><div class="company">百果园集团</div></div></div>
+                <div class="card"><div class="avatar">刘</div><div class="info"><div class="name">刘粤</div><div class="company">长城物业</div></div></div>
+                <div class="card"><div class="avatar">文</div><div class="info"><div class="name">文鹏淏</div><div class="company">长城物业</div></div></div>
+                <div class="card"><div class="avatar">杜</div><div class="info"><div class="name">杜芹</div><div class="company">上海金发科技</div></div></div>
+                <div class="card"><div class="avatar">程</div><div class="info"><div class="name">程宁</div><div class="company">广东瑞高海运</div></div></div>
+                <div class="card"><div class="avatar">何</div><div class="info"><div class="name">何文轩</div><div class="company">广东瑞高海运</div></div></div>
+                <div class="card"><div class="avatar">赫</div><div class="info"><div class="name">赫磊</div><div class="company">广东瑞高海运</div></div></div>
+                <div class="card"><div class="avatar">潘</div><div class="info"><div class="name">潘伟建</div><div class="company">广东瑞高海运</div></div></div>
+                <div class="card"><div class="avatar">周</div><div class="info"><div class="name">周正纲</div><div class="company">广东瑞高海运</div></div></div>
+                <div class="card"><div class="avatar">韦</div><div class="info"><div class="name">韦伟庆</div><div class="company">广东瑞高海运</div></div></div>
+                <div class="card"><div class="avatar">廖</div><div class="info"><div class="name">廖静</div><div class="company">广东瑞高海运</div></div></div>
+                <div class="card"><div class="avatar">孙</div><div class="info"><div class="name">孙玉强</div><div class="company">广东瑞高海运</div></div></div>
+                <div class="card"><div class="avatar">李</div><div class="info"><div class="name">李维</div><div class="company">金域医学</div></div></div>
+                <div class="card"><div class="avatar">肖</div><div class="info"><div class="name">肖晗</div><div class="company">金域医学</div></div></div>
+                <div class="card"><div class="avatar">张</div><div class="info"><div class="name">张楠</div><div class="company">金域医学</div></div></div>
+                <div class="card"><div class="avatar">黄</div><div class="info"><div class="name">黄耀风</div><div class="company">江波龙电子</div></div></div>
+                <div class="card"><div class="avatar">张</div><div class="info"><div class="name">张梦伟</div><div class="company">江波龙电子</div></div></div>
+                <div class="card"><div class="avatar">廖</div><div class="info"><div class="name">廖梦雅</div><div class="company">重庆中邮信科</div></div></div>
+                <div class="card"><div class="avatar">孙</div><div class="info"><div class="name">孙瑶</div><div class="company">重庆中邮信科</div></div></div>
+                <div class="card"><div class="avatar">许</div><div class="info"><div class="name">许泉</div><div class="company">锐捷网络</div></div></div>
+                <div class="card"><div class="avatar">陈</div><div class="info"><div class="name">陈献文</div><div class="company">锐捷网络</div></div></div>
+                <div class="card"><div class="avatar">张</div><div class="info"><div class="name">张晓燕</div><div class="company">前海星客商业</div></div></div>
+                <div class="card"><div class="avatar">吴</div><div class="info"><div class="name">吴亭橙</div><div class="company">永银文化</div></div></div>
+                <div class="card"><div class="avatar">董</div><div class="info"><div class="name">董源苑</div><div class="company">永银文化</div></div></div>
+                <div class="card"><div class="avatar">严</div><div class="info"><div class="name">严涛涛</div><div class="company">永银文化</div></div></div>
+                <div class="card"><div class="avatar">张</div><div class="info"><div class="name">张昭红</div><div class="company">高典卫浴</div></div></div>
+                <div class="card"><div class="avatar">柳</div><div class="info"><div class="name">柳秋月</div><div class="company">宁德新能源</div></div></div>
+                <div class="card"><div class="avatar">章</div><div class="info"><div class="name">章盼松</div><div class="company">宁德新能源</div></div></div>
+                <div class="card"><div class="avatar">杨</div><div class="info"><div class="name">杨昔宁</div><div class="company">高山集团</div></div></div>
+                <div class="card"><div class="avatar">李</div><div class="info"><div class="name">李永辉</div><div class="company">箭牌家居</div></div></div>
+                <div class="card"><div class="avatar">刘</div><div class="info"><div class="name">刘南</div><div class="company">箭牌家居</div></div></div>
+                <div class="card"><div class="avatar">于</div><div class="info"><div class="name">于丹</div><div class="company">箭牌家居</div></div></div>
+                <div class="card"><div class="avatar">杨</div><div class="info"><div class="name">杨晓蕾</div><div class="company">箭牌家居</div></div></div>
+                <div class="card"><div class="avatar">汪</div><div class="info"><div class="name">汪毅</div><div class="company">箭牌家居</div></div></div>
+                <div class="card"><div class="avatar">薛</div><div class="info"><div class="name">薛建</div><div class="company">雅迅智联科技</div></div></div>
+                <div class="card"><div class="avatar">陈</div><div class="info"><div class="name">陈长飞</div><div class="company">雅迅智联科技</div></div></div>
+                <div class="card"><div class="avatar">李</div><div class="info"><div class="name">李君</div><div class="company">景旺</div></div></div>
+                <div class="card"><div class="avatar">李</div><div class="info"><div class="name">李伟</div><div class="company">景旺</div></div></div>
+                <div class="card"><div class="avatar">李</div><div class="info"><div class="name">李九江</div><div class="company">艾比森光电</div></div></div>
+                <div class="card"><div class="avatar">张</div><div class="info"><div class="name">张杰</div><div class="company">睿创微纳</div></div></div>
+                <div class="card"><div class="avatar">谢</div><div class="info"><div class="name">谢蔚</div><div class="company">海纳泽华财税服务</div></div></div>
+                <div class="card"><div class="avatar">范</div><div class="info"><div class="name">范艳梅</div><div class="company">欣旺达电子</div></div></div>
+                <div class="card"><div class="avatar">文</div><div class="info"><div class="name">文素青</div><div class="company">欣旺达电子</div></div></div>
+                <div class="card"><div class="avatar">席</div><div class="info"><div class="name">席榕</div><div class="company">欣旺达电子</div></div></div>
+                <div class="card"><div class="avatar">林</div><div class="info"><div class="name">林俊辉</div><div class="company">信泰集团</div></div></div>
+                <div class="card"><div class="avatar">王</div><div class="info"><div class="name">王峤乔</div><div class="company">邦普循环</div></div></div>
+                <div class="card"><div class="avatar">李</div><div class="info"><div class="name">李家影</div><div class="company">景兴健康护理</div></div></div>
+            </div>
+        </div>
+
+        <div class="divider"></div>
+        <h2 class="section-title">参课企业</h2>
+        <div class="company-summary">
+            <div class="company-tags">
+                <span class="company-tag">江波龙电子</span>
+                <span class="company-tag">箭牌家居</span>
+                <span class="company-tag">广东瑞高海运</span>
+                <span class="company-tag">欣旺达电子</span>
+                <span class="company-tag">永银文化</span>
+                <span class="company-tag">锐捷网络</span>
+                <span class="company-tag">重庆中邮信科</span>
+                <span class="company-tag">金域医学</span>
+                <span class="company-tag">简一陶瓷</span>
+                <span class="company-tag">金升阳科技</span>
+                <span class="company-tag">百果园集团</span>
+                <span class="company-tag">长城物业</span>
+                <span class="company-tag">则成电子</span>
+                <span class="company-tag">雅迅智联科技</span>
+                <span class="company-tag">宁德新能源</span>
+                <span class="company-tag">景旺</span>
+                <span class="company-tag">高典卫浴</span>
+                <span class="company-tag">高山集团</span>
+                <span class="company-tag">海大集团</span>
+                <span class="company-tag">深圳北科</span>
+                <span class="company-tag">北方夜视科技</span>
+                <span class="company-tag">上海金发科技</span>
+                <span class="company-tag">前海星客商业</span>
+                <span class="company-tag">艾比森光电</span>
+                <span class="company-tag">睿创微纳</span>
+                <span class="company-tag">海纳泽华财税服务</span>
+                <span class="company-tag">信泰集团</span>
+                <span class="company-tag">邦普循环</span>
+                <span class="company-tag">景兴健康护理</span>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>端到端咨询 · 2026年6月AI+流程公开课深圳站</p>
+        </div>
+    </div>
+
+    <script>
+        function switchDay(index) {
+            // 切换按钮状态
+            document.querySelectorAll('.nav-btn').forEach((btn, i) => {
+                btn.classList.toggle('active', i === index);
+            });
+            // 切换面板
+            document.querySelectorAll('.day-panel').forEach((panel, i) => {
+                panel.classList.toggle('active', i === index);
+            });
+            // 重新触发动画
+            const cards = document.querySelectorAll('.day-panel.active .card');
+            cards.forEach((card, i) => {
+                card.style.animation = 'none';
+                card.offsetHeight;
+                card.style.animation = `fadeIn 0.4s ease ${i * 0.03}s forwards`;
+            });
+        }
+    </script>
+</body>
+</html>
